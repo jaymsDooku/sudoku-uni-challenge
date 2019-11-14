@@ -1,6 +1,5 @@
 package io.jayms.sudoku;
 
-import java.io.File;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -22,15 +21,19 @@ public class SudokuTextInterface {
 			System.out.println("3. Exit");
 			try {
 				int option = in.nextInt();
+				in.nextLine();
 				switch (option) {
 					case 1:
 						System.out.println(sudoku.display());
 						break;
 					case 2:
 						System.out.println("Enter filename: ");
-						String filename = in.nextLine();
-						
-						
+						String filename = in.nextLine() + ".txt";
+						if (SudokuIO.writeToFile(filename, sudoku)) {
+							System.out.println("Written sudoku display to: " + filename);
+						} else {
+							System.out.println("Failed to write sudoku.");
+						}
 						break;
 					case 3:
 						System.out.println("Goodbye.");
