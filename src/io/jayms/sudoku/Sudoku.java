@@ -67,35 +67,18 @@ public class Sudoku {
 		horizontalBar(textDisplay);
 		newLine(textDisplay);
 		
-		int prevI = 0;
-		for (int i = 3; i <= 9; i += 3) {
-			project(textDisplay, grid, new Vec2D(0, prevI), new Vec2D(3, i));
+		int prevI;
+		for (int l = 0; l < 3; l++) {
+			prevI = 0;
+			for (int i = 3; i <= 9; i += 3) {
+				project(textDisplay, grid, new Vec2D(l * 3, prevI), new Vec2D((l+1) * 3, i));
+				newLine(textDisplay);
+				prevI = i;
+			}
+			
+			horizontalBar(textDisplay);
 			newLine(textDisplay);
-			prevI = i;
 		}
-		
-		horizontalBar(textDisplay);
-		newLine(textDisplay);
-		
-		prevI = 0;
-		for (int i = 3; i <= 9; i += 3) {
-			project(textDisplay, grid, new Vec2D(3, prevI), new Vec2D(6, i));
-			newLine(textDisplay);
-			prevI = i;
-		}
-		
-		horizontalBar(textDisplay);
-		newLine(textDisplay);
-		
-		prevI = 0;
-		for (int i = 3; i <= 9; i += 3) {
-			project(textDisplay, grid, new Vec2D(6, prevI), new Vec2D(9, i));
-			newLine(textDisplay);
-			prevI = i;
-		}
-		
-		horizontalBar(textDisplay);
-		newLine(textDisplay);
 		
 		return textDisplay.toString();
 	}
