@@ -80,6 +80,10 @@ public class Sudoku {
 		return grid[i][j];
 	}
 	
+	public int[] getRegion(int x, int y) {
+		return grid[Vec2D.fromCartesian(x, y).getI()];
+	}
+	
 	public int[] getRegion(int i) {
 		return grid[i];
 	}

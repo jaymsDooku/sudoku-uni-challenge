@@ -7,7 +7,7 @@ public class Vec2D {
 	}
 	
 	public static int getI(int x, int y) {
-		int i = roundDown(x, 3) / 3;
+		int i = MathUtil.roundDown(x, 3) / 3;
 		
 		if (y > 2) i += 3;
 		if (y > 4) i += 3;
@@ -32,10 +32,6 @@ public class Vec2D {
 		
 		return j;
 	}
-	
-	static int roundDown(int n, int m) {
-	    return n >= 0 ? (n / m) * m : ((n - m + 1) / m) * m;
-	}
 
 	private int i;
 	private int j;
@@ -50,6 +46,14 @@ public class Vec2D {
 	}
 	
 	public int getJ() {
+		return j;
+	}
+	
+	public int getX() {
+		return i;
+	}
+	
+	public int getY() {
 		return j;
 	}
 	

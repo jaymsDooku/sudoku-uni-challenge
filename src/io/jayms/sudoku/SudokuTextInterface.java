@@ -8,8 +8,10 @@ import io.jayms.sudoku.menu.DisplayOption;
 import io.jayms.sudoku.menu.ExitOption;
 import io.jayms.sudoku.menu.ReadFromFileOption;
 import io.jayms.sudoku.menu.SetValueOption;
+import io.jayms.sudoku.menu.SolveSudokuOption;
 import io.jayms.sudoku.menu.SudokuTextMenu;
 import io.jayms.sudoku.menu.SudokuTextOption;
+import io.jayms.sudoku.menu.ValidateSudokuOption;
 import io.jayms.sudoku.menu.WriteToFileOption;
 
 public class SudokuTextInterface {
@@ -27,6 +29,8 @@ public class SudokuTextInterface {
 		menu.registerOption(new SetValueOption(in));
 		menu.registerOption(new WriteToFileOption(in));
 		menu.registerOption(new ReadFromFileOption(in));
+		menu.registerOption(new ValidateSudokuOption(in));
+		menu.registerOption(new SolveSudokuOption(in));
 		menu.registerOption(new ExitOption(in));
 	}
 	
