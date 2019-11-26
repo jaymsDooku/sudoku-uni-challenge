@@ -27,4 +27,11 @@ public abstract class SudokuTextOption implements SudokuMenuOption, Comparable<S
 		}
 	}
 	
+	protected int getInt(String prompt) {
+		System.out.println(prompt);
+		int i = getScanner().nextInt();
+		getScanner().nextLine();
+		return i;
+	}
+	
 }

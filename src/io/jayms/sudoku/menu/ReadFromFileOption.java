@@ -1,7 +1,6 @@
 package io.jayms.sudoku.menu;
 
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import io.jayms.sudoku.Sudoku;
@@ -16,12 +15,12 @@ public class ReadFromFileOption extends SudokuTextOption {
 
 	@Override
 	public int id() {
-		return 3;
+		return TextOptionID.READ_FILE_OPTION;
 	}
 
 	@Override
 	public String text() {
-		return "Write Sudoku To File";
+		return "Read Sudoku from file";
 	}
 
 	@Override
@@ -29,10 +28,8 @@ public class ReadFromFileOption extends SudokuTextOption {
 		System.out.println("Enter filename: ");
 		String filename = getScanner().nextLine() + ".txt";
 		try {
-			int[][] grid = SudokuIO.readGridFromFile(filename);
-			for (int i = 0; i < grid.length; i++) {
-				System.out.println("arr " + (i+1) + ": " + Arrays.toString(grid[i]));
-			}
+			sudoku = SudokuIO.readSudokuFromFile(filename, 27);
+			System.out.println("Loaded sudoku: " + sudoku.display());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (SudokuException e) {

@@ -1,11 +1,13 @@
 package io.jayms.sudoku;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 import io.jayms.sudoku.menu.DisplayOption;
 import io.jayms.sudoku.menu.ExitOption;
 import io.jayms.sudoku.menu.ReadFromFileOption;
+import io.jayms.sudoku.menu.SetValueOption;
 import io.jayms.sudoku.menu.SudokuTextMenu;
 import io.jayms.sudoku.menu.SudokuTextOption;
 import io.jayms.sudoku.menu.WriteToFileOption;
@@ -22,6 +24,7 @@ public class SudokuTextInterface {
 		this.menu = new SudokuTextMenu();
 		
 		menu.registerOption(new DisplayOption(in));
+		menu.registerOption(new SetValueOption(in));
 		menu.registerOption(new WriteToFileOption(in));
 		menu.registerOption(new ReadFromFileOption(in));
 		menu.registerOption(new ExitOption(in));
@@ -30,10 +33,10 @@ public class SudokuTextInterface {
 	public void start() {
 		while (true) {
 			System.out.println("Options:");
-			System.out.println("1. Display Sudoku");
-			System.out.println("2. Write Sudoku to File");
-			System.out.println("3. Read Sudoku from File");
-			System.out.println("4. Exit");
+			List<SudokuTextOption> options = menu.getOrderedOptions();
+			for (SudokuTextOption option : options) {
+				System.out.println(option.id() + ". " + option.text());
+			}
 			try {
 				int option = in.nextInt();
 				in.nextLine();

@@ -13,7 +13,7 @@ public class WriteToFileOption extends SudokuTextOption {
 
 	@Override
 	public int id() {
-		return 2;
+		return TextOptionID.WRITE_FILE_OPTION;
 	}
 
 	@Override

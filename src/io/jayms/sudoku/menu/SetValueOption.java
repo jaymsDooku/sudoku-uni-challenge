@@ -4,24 +4,28 @@ import java.util.Scanner;
 
 import io.jayms.sudoku.Sudoku;
 
-public class DisplayOption extends SudokuTextOption {
+public class SetValueOption extends SudokuTextOption {
 
-	public DisplayOption(Scanner in) {
+	public SetValueOption(Scanner in) {
 		super(in);
 	}
 
 	@Override
 	public int id() {
-		return TextOptionID.DISPLAY_OPTION;
+		return TextOptionID.SET_VALUE_OPTION;
 	}
 
 	@Override
 	public String text() {
-		return "Display Sudoku";
+		return "Set Sudoku value";
 	}
 
 	@Override
 	public Sudoku process(Sudoku sudoku) {
+		int x = getInt("Enter x: ");
+		int y = getInt("Enter y: ");
+		int value = getInt("Enter value: ");
+		sudoku.set(x, y, value);
 		System.out.println(sudoku.display());
 		return sudoku;
 	}

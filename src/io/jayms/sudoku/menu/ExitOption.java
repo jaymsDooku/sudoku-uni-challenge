@@ -12,7 +12,7 @@ public class ExitOption extends SudokuTextOption {
 
 	@Override
 	public int id() {
-		return 4;
+		return TextOptionID.EXIT_OPTION;
 	}
 
 	@Override

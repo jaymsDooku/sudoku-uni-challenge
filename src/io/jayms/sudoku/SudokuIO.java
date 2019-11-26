@@ -33,6 +33,7 @@ public class SudokuIO {
 			
 			writer.flush();
 			writer.close();
+			in.close();
 			return true;
 		} catch (IOException e) {
 			return false;
@@ -65,11 +66,26 @@ public class SudokuIO {
 		
 		int[][] grid = new int[9][9];
 		int prevI = 0;
-		for (int i = 0; i < text.size(); i++) {
-			String line = text.get(i);
-			//grid = extractFromText(grid, line, new Vec2D(0, 0), new Vec2D());
-			
-			//TODO: sort out whatever the hell is happening here
+		int i = 3;
+		int prevJ = 0;
+		int j = 3;
+		for (int l = 0; l < text.size(); l++) {
+			String line = text.get(l);
+			extractFromText(grid, line, new Vec2D(prevI, prevJ), new Vec2D(i, j));
+			if ((l+1) % 3 == 0) {
+				prevI = i;
+				i += 3;
+			}
+			if (i >= 12) {
+				prevI = 0;
+				i = 3;
+			}
+			prevJ = j;
+			j += 3;
+			if (j >= 12) {
+				prevJ = 0;
+				j = 3;
+			}
 		}
 		
 		return grid;
@@ -89,12 +105,14 @@ public class SudokuIO {
 		}
 	}
 	
-	public static Sudoku readSudokuFromFile(String file) throws FileNotFoundException, SudokuException {
-		return null;
+	public static Sudoku readSudokuFromFile(String file, int clues) throws FileNotFoundException, SudokuException {
+		int[][] grid = readGridFromFile(file);
+		return new Sudoku(clues, grid);
 	}
 	
-	public static Sudoku readSudokuFromFile(File file) throws FileNotFoundException, SudokuException {
-		return null;
+	public static Sudoku readSudokuFromFile(File file, int clues) throws FileNotFoundException, SudokuException {
+		int[][] grid = readGridFromFile(file);
+		return new Sudoku(clues, grid);
 	}
 	
 }

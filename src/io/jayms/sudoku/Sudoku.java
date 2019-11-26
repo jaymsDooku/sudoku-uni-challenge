@@ -1,5 +1,6 @@
 package io.jayms.sudoku;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import io.jayms.sudoku.util.Vec2D;
@@ -62,6 +63,43 @@ public class Sudoku {
 		}
 	}
 	
+	public void set(int x, int y, int value) {
+		Vec2D coords = Vec2D.fromCartesian(x, y);
+		int i = coords.getI();
+		int j = coords.getJ();
+		
+		System.out.println("i=" + i + ", j=" + j);
+		grid[i][j] = value;
+	}
+	
+	public int get(int x, int y) {
+		Vec2D coords = Vec2D.fromCartesian(x, y);
+		int i = coords.getI();
+		int j = coords.getJ();
+		
+		return grid[i][j];
+	}
+	
+	public int[] getRegion(int i) {
+		return grid[i];
+	}
+	
+	public int[] getColumn(int x) {
+		int[] column = new int[9];
+		for (int y = 0; y < 9; y++) {
+			column[y] = get(x, y);
+		}
+		return column;
+	}
+	
+	public int[] getRow(int y) {
+		int[] row = new int[9];
+		for (int x = 0; x < 9; x++) {
+			row[x] = get(x, y);
+		}
+		return row;
+	}
+	
 	public String display() {
 		StringBuilder textDisplay = new StringBuilder();
 		horizontalBar(textDisplay);
@@ -81,6 +119,22 @@ public class Sudoku {
 		}
 		
 		return textDisplay.toString();
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for (int i = 0; i < grid.length; i++) {
+			sb.append("[");
+			sb.append(Arrays.toString(grid[i]));
+			sb.append("]");
+			if (i < grid.length - 1) {
+				sb.append(",\n ");
+			}
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 	
 	public static void project(StringBuilder sb, int[][] grid, Vec2D min, Vec2D max) {
