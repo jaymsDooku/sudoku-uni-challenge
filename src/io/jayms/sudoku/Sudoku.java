@@ -7,6 +7,8 @@ import io.jayms.sudoku.util.Vec2D;
 
 public class Sudoku {
 
+	public static final int GRID_DIMENSIONS = 9;
+	
 	private static final Random RNG = new Random();
 	
 	private int clues;
@@ -19,7 +21,7 @@ public class Sudoku {
 	
 	public Sudoku(int clues, int[][] grid) {
 		this.clues = clues;
-		if (grid == null) {
+		if (grid == null || grid.length != GRID_DIMENSIONS) {
 			resetGrid();
 		} else {
 			this.grid = grid;
@@ -68,7 +70,7 @@ public class Sudoku {
 		int i = coords.getI();
 		int j = coords.getJ();
 		
-		System.out.println("i=" + i + ", j=" + j);
+		System.out.println("i=" + i + ", j=" + j + ", x=" + x + ", y=" + y);
 		grid[i][j] = value;
 	}
 	
@@ -102,6 +104,25 @@ public class Sudoku {
 			row[x] = get(x, y);
 		}
 		return row;
+	}
+	
+	public boolean isEmptyCell(Vec2D vec) {
+		return isEmptyCell(vec.getX(), vec.getY());
+	}
+	
+	public boolean isEmptyCell(int x, int y) {
+		return get(x, y) == -1;
+	}
+	
+	public boolean isComplete() {
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j] == -1) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	public String display() {

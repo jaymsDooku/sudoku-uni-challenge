@@ -28,7 +28,7 @@ public class Vec2D {
 			ny -= 3;
 		}
 		
-		j = nx + (ny * 3);
+		j = nx + (ny + 3);
 		
 		return j;
 	}

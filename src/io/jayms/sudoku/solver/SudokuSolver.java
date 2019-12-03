@@ -1,7 +1,9 @@
 package io.jayms.sudoku.solver;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
 
 import io.jayms.sudoku.Sudoku;
 import io.jayms.sudoku.util.Vec2D;
@@ -9,145 +11,68 @@ import io.jayms.sudoku.util.Vec2D;
 public class SudokuSolver {
 
 	private Sudoku sudoku;
-	private SudokuSolverCell[][] cellData;
-	private List<CellAssignment> assignments;
-	private double basePheromone;
+	private Deque<SudokuAssignment> assignmentHistory;
 	
-	private int basicIterations;
-	private int improvedIterations;
-	private int acoIterations;
-	
-	public SudokuSolver(Sudoku sudoku, double basePheromone) {
+	public SudokuSolver(Sudoku sudoku) {
 		this.sudoku = sudoku;
-		this.cellData = new SudokuSolverCell[9][9];
-		this.assignments = new ArrayList<>();
-		this.basePheromone = basePheromone;
+		this.assignmentHistory = new ArrayDeque<>();
 	}
 	
 	public void solve() {
-		while (basicAssignment()) {
-			basicIterations++;
-		}
-		
-	}
-	
-	public int assignments() {
-		return assignments.size();
-	}
-	
-	public int getBasicIterations() {
-		return basicIterations;
-	}
-	
-	public int getImprovedIterations() {
-		return improvedIterations;
-	}
-	
-	public int findUnassignedCells() {
-		int count = 0;
-		for (int x = 0; x < 9; x++) {
-			for (int y = 0; y < 9; y++) {
-				int val = sudoku.get(x, y);
-				if (val != -1) {
-					getCellData(x, y);
-					count++;
-				}
-			}
-		}
-		return count;
-	}
-	
-	
-	
-	public boolean basicAssignment() {
-		boolean madeAssignment = false;
-		for (int x = 0; x < 9; x++) {
-			for (int y = 0; y < 9; y++) {
-				int val = sudoku.get(x, y);
-				if (val != -1) continue;
-				SudokuSolverCell cell = getCellData(x, y);
-				unavailable(cell, sudoku.getColumn(x));
-				unavailable(cell, sudoku.getRow(y));
-				unavailable(cell, sudoku.getRegion(x, y));
-				
-				int solution = cell.solved();
-				if (solution != -1) {
-					sudoku.set(x, y, solution);
-					assignments.add(new CellAssignment(new Vec2D(x, y), solution, CellAssignmentType.BASIC));
-					madeAssignment = true;
-				}
-			}
-		}
-		return madeAssignment;
-	}
-	
-	public boolean improvedAssignment(ImprovedAssignmentTarget target) {
-		boolean improvedAssignment = false;
-		for (int x = 0; x < 9; x++) {
-			for (int y = 0; y < 9; y++) {
-				SudokuSolverCell cell = cellData[x][y];
-				if (cell == null) continue;
-				if (cell.available() != 1) continue;
-				
-				SudokuSolverCell[] checkCells = target.getCellProvider().apply(this, new Vec2D(x, y));
-				for (AvailableNumber a : cell.getAvailable()) {
-					boolean available = false;
-					for (SudokuSolverCell checkingCell : checkCells) {
-						if (checkingCell.isAvailable(a)) {
-							break;
-						}
+		for (int x = 0; x < Sudoku.GRID_DIMENSIONS; x++) {
+			for (int y = 0; y < Sudoku.GRID_DIMENSIONS; y++) {
+				if (!sudoku.isEmptyCell(x, y)) continue;
+				boolean foundMove = false;
+				for (int i = 1; i < 10; i++) {
+					if (isValidMove(x, y, i)) {
+						System.out.println("Trying " + i + " x=" + x + ", y=" + y + ", assignments=" + assignmentHistory.size());
+						set(x, y, i);
+						foundMove = true;
 					}
-					
+				}
+				if (!foundMove) {
+					System.out.println("undoing " + x + " " + y);
+					SudokuAssignment assignment = undo();
+					x = assignment.getPos().getX();
+					y = assignment.getPos().getY();
 				}
 			}
 		}
-		return improvedAssignment;
 	}
 	
-	private void unavailable(SudokuSolverCell cell, int[] arr) {
-		for (int i = 0; i < arr.length; i++) {
-			cell.unavailable(arr[i]);
-		}
+	private void set(int x, int y, int num) {
+		sudoku.set(x, y, num);
+		assignmentHistory.push(new SudokuAssignment(new Vec2D(x, y), num));
 	}
 	
-	public SudokuSolverCell getCellData(int x, int y) {
-		SudokuSolverCell cell = cellData[x][y];
-		if (cell == null) {
-			cell = new SudokuSolverCell(new Vec2D(x, y));
-			cellData[x][y] = cell;
-		}
-		return cell;
+	private SudokuAssignment undo() {
+		SudokuAssignment assignment = assignmentHistory.pop();
+		int x = assignment.getPos().getX();
+		int y = assignment.getPos().getY();
+		sudoku.set(x, y, -1);
+		return assignment;
 	}
 	
-	public SudokuSolverCell[] getColumn(int x) {
-		SudokuSolverCell[] column = new SudokuSolverCell[9];
-		for (int y = 0; y < column.length; y++) {
-			column[y] = cellData[x][y];
-		}
-		return column;
+	public boolean isValidMove(int x, int y, int num) {
+		int[] row = sudoku.getRow(y);
+		int[] column = sudoku.getColumn(x);
+		int[] region = sudoku.getRegion(x, y);
+		Set<Integer> rowSet = set(row);
+		Set<Integer> columnSet = set(column);
+		Set<Integer> regionSet = set(region);
+		return !rowSet.contains(num) && !columnSet.contains(num) && !regionSet.contains(num);
 	}
 	
-	public SudokuSolverCell[] getRow(int y) {
-		SudokuSolverCell[] row = new SudokuSolverCell[9];
-		for (int x = 0; x < row.length; x++) {
-			row[x] = cellData[x][y];
+	private static Set<Integer> set(int[] arr) {
+		Set<Integer> result = new HashSet<>();
+		for (int i : arr) {
+			result.add(i);
 		}
-		return row;
+		return result;
 	}
 	
-	public SudokuSolverCell[] getRegion(int x, int y) {
-		SudokuSolverCell[] region = new SudokuSolverCell[9];
-		int minI = x / 3;
-		int minJ = y / 3;
-		int maxI = minI + 3;
-		int maxJ = minJ + 3;
-		int r = 0;
-		for (int i = minI; i < maxI; i++) {
-			for (int j = minJ; j< maxJ; j++) {
-				region[r++] = cellData[i][j]; 
-			}
-		}
-		return region;
+	public Sudoku getSudoku() {
+		return sudoku;
 	}
 	
 }

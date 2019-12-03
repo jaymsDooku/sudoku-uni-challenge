@@ -24,7 +24,7 @@ public class SolveSudokuOption extends SudokuTextOption {
 
 	@Override
 	public Sudoku process(Sudoku sudoku) {
-		SudokuSolver solver = new SudokuSolver(sudoku, 1D);
+		SudokuSolver solver = new SudokuSolver(sudoku);
 		System.out.println("Before: ");
 		System.out.println(sudoku.display());
 		
@@ -32,8 +32,6 @@ public class SolveSudokuOption extends SudokuTextOption {
 		
 		System.out.println("After: ");
 		System.out.println(sudoku.display());
-		
-		System.out.println("Assignments Made: " + solver.assignments());
 		
 		SudokuValidator validator = new SudokuValidator(sudoku);
 		String outcome = validator.validate() ? "passed" : "failed";
