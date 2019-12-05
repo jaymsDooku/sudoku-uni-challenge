@@ -32,9 +32,9 @@ public class SudokuSolver {
 		
 		for (int i = 1; i < 10; i++) {
 			if (isValidMove(x, y, i)) {
-				sudoku.set(cell.getX(), cell.getY(), i);
-				if (!solve(cell.getX(), cell.getY())) {
-					sudoku.set(cell.getX(), cell.getY(), -1);
+				sudoku.set(x, y, i);
+				if (!solve(x, y)) {
+					sudoku.set(x, y, -1);
 				} else {
 					return true;
 				}

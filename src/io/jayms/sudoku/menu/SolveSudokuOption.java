@@ -30,27 +30,27 @@ public class SolveSudokuOption extends SudokuTextOption {
 		System.out.println("Before: ");
 		System.out.println(sudoku.display());
 		
-		solver.solve();
+		boolean solved = solver.solve();
 		
-		System.out.println("After: ");
-		System.out.println(sudoku.display());
-		
-		SudokuValidator validator = new SudokuValidator(sudoku);
-		String outcome = validator.validate() ? "passed" : "failed";
-		System.out.println("Sudoku " + outcome + " validation.");
-		
-		System.out.println("Would you like to write solution to file? (Y/N)");
-		String choice = getScanner().nextLine().toUpperCase();
-		if (!choice.equals("Y")) {
-			return sudoku;
-		}
-		
-		System.out.println("Enter filename: ");
-		String filename = getScanner().nextLine() + ".txt";
-		if (SudokuIO.writeToFile(filename, solutionCopy)) {
-			System.out.println("Written sudoku solution to: " + filename);
+		if (solved) {
+			System.out.println("After: ");
+			System.out.println(sudoku.display());
+			
+			System.out.println("Would you like to write solution to file? (Y/N)");
+			String choice = getScanner().nextLine().toUpperCase();
+			if (!choice.equals("Y")) {
+				return sudoku;
+			}
+			
+			System.out.println("Enter filename: ");
+			String filename = getScanner().nextLine() + ".txt";
+			if (SudokuIO.writeToFile(filename, solutionCopy)) {
+				System.out.println("Written sudoku solution to: " + filename);
+			} else {
+				System.out.println("Failed to write sudoku.");
+			}
 		} else {
-			System.out.println("Failed to write sudoku.");
+			System.out.println("This sudoku is not possible.");
 		}
 		
 		return sudoku;
