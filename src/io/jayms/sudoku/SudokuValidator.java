@@ -25,11 +25,10 @@ public class SudokuValidator {
 			int[] region = sudoku.getRegion(i);
 			Set<Integer> regionSet = new HashSet<>();
 			for (int j = 0; j < region.length; j++) {
-				if (!regionSet.add(region[i])) {
+				if (!regionSet.add(region[j])) {
 					return false;
 				}
 			}
-			
 		}
 		return true;
 	}

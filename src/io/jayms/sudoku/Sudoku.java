@@ -70,7 +70,7 @@ public class Sudoku {
 		int i = coords.getI();
 		int j = coords.getJ();
 		
-		System.out.println("i=" + i + ", j=" + j + ", x=" + x + ", y=" + y);
+		//System.out.println("i=" + i + ", j=" + j + ", x=" + x + ", y=" + y);
 		grid[i][j] = value;
 	}
 	
@@ -144,6 +144,11 @@ public class Sudoku {
 		}
 		
 		return textDisplay.toString();
+	}
+	
+	public Sudoku copy() {
+		Sudoku sudoku = new Sudoku(clues, grid);
+		return sudoku;
 	}
 	
 	@Override

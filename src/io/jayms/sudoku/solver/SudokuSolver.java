@@ -1,7 +1,5 @@
 package io.jayms.sudoku.solver;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,46 +9,49 @@ import io.jayms.sudoku.util.Vec2D;
 public class SudokuSolver {
 
 	private Sudoku sudoku;
-	private Deque<SudokuAssignment> assignmentHistory;
 	
 	public SudokuSolver(Sudoku sudoku) {
 		this.sudoku = sudoku;
-		this.assignmentHistory = new ArrayDeque<>();
 	}
 	
-	public void solve() {
-		for (int x = 0; x < Sudoku.GRID_DIMENSIONS; x++) {
-			for (int y = 0; y < Sudoku.GRID_DIMENSIONS; y++) {
-				if (!sudoku.isEmptyCell(x, y)) continue;
-				boolean foundMove = false;
-				for (int i = 1; i < 10; i++) {
-					if (isValidMove(x, y, i)) {
-						System.out.println("Trying " + i + " x=" + x + ", y=" + y + ", assignments=" + assignmentHistory.size());
-						set(x, y, i);
-						foundMove = true;
-					}
-				}
-				if (!foundMove) {
-					System.out.println("undoing " + x + " " + y);
-					SudokuAssignment assignment = undo();
-					x = assignment.getPos().getX();
-					y = assignment.getPos().getY();
+	public boolean solve() {
+		return solve(0, 0);
+	}
+	
+	private boolean solve(int x, int y) {
+		if (sudoku.isComplete()) {
+			return true;
+		}
+		
+		Vec2D cell = getNextCell(x, y);
+		while (!sudoku.isEmptyCell(cell)) {
+			cell = getNextCell(cell.getX(), cell.getY());
+		}
+		x = cell.getX();
+		y = cell.getY();
+		
+		for (int i = 1; i < 10; i++) {
+			if (isValidMove(x, y, i)) {
+				sudoku.set(cell.getX(), cell.getY(), i);
+				if (!solve(cell.getX(), cell.getY())) {
+					sudoku.set(cell.getX(), cell.getY(), -1);
+				} else {
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 	
-	private void set(int x, int y, int num) {
-		sudoku.set(x, y, num);
-		assignmentHistory.push(new SudokuAssignment(new Vec2D(x, y), num));
-	}
-	
-	private SudokuAssignment undo() {
-		SudokuAssignment assignment = assignmentHistory.pop();
-		int x = assignment.getPos().getX();
-		int y = assignment.getPos().getY();
-		sudoku.set(x, y, -1);
-		return assignment;
+	private Vec2D getNextCell(int x, int y) {
+		if (x == Sudoku.GRID_DIMENSIONS - 1 && y == Sudoku.GRID_DIMENSIONS - 1) {
+			return null;
+		}
+		if (y < Sudoku.GRID_DIMENSIONS - 1) {
+			return new Vec2D(x, y + 1);
+		} else {
+			return new Vec2D(x + 1, 0);
+		}
 	}
 	
 	public boolean isValidMove(int x, int y, int num) {
