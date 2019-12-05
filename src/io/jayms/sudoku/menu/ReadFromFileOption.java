@@ -33,7 +33,7 @@ public class ReadFromFileOption extends SudokuTextOption {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (SudokuException e) {
-			e.printStackTrace();
+			System.out.println("Failed to load sudoku: " + e.getMessage());
 		}
 		return sudoku;
 	}

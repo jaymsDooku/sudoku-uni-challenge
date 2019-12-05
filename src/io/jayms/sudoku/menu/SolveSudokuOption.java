@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import io.jayms.sudoku.Sudoku;
 import io.jayms.sudoku.SudokuIO;
-import io.jayms.sudoku.SudokuValidator;
 import io.jayms.sudoku.solver.SudokuSolver;
 
 public class SolveSudokuOption extends SudokuTextOption {
