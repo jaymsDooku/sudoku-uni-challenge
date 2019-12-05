@@ -24,11 +24,11 @@ public class SudokuSolver {
 		}
 		
 		Vec2D cell = getNextCell(x, y);
-		while (!sudoku.isEmptyCell(cell)) {
-			cell = getNextCell(cell.getX(), cell.getY());
-		}
 		x = cell.getX();
 		y = cell.getY();
+		while (!sudoku.isEmptyCell(cell)) {
+			cell = getNextCell(x, y);
+		}
 		
 		for (int i = 1; i < 10; i++) {
 			if (isValidMove(x, y, i)) {
